@@ -4,79 +4,368 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multi-Agent AI System</title>
+    <title>THE COMMITTEE</title>
 
-    <!-- Tailwind CSS CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Custom Styles (if any) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
+
     <style>
-        /* Optional custom styles can be added here */
-        .sidebar {
-            width: 300px;
-            transition: transform 0.3s ease-in-out;
+        /* Base Aesthetic */
+        body {
+            background-color: #09090b;
+            /* Zinc 950 */
+            /* The Nothing-style pixel grid background */
+            background-image: radial-gradient(#27272a 1px, transparent 1px);
+            background-size: 24px 24px;
+            color: #e4e4e7;
+            font-family: ui-sans-serif, system-ui, sans-serif;
+            overflow: hidden;
         }
 
-        .sidebar.closed {
-            transform: translateX(100%);
+        /* Dot-Matrix Typography Application */
+        .ndot {
+            font-family: 'DotGothic16', sans-serif;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #3f3f46;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #52525b;
+        }
+
+        /* SVG Gauge Animation Styles */
+        .gauge-arc {
+            transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* The Single Accent Color (Red) */
+        .accent-red {
+            color: #ef4444;
+        }
+
+        .bg-accent-red {
+            background-color: #ef4444;
+        }
+
+        .stroke-accent-red {
+            stroke: #ef4444;
         }
     </style>
 </head>
 
-<body class="bg-slate-900 text-white flex min-h-screen">
+<body class="flex h-screen w-full">
 
-    <!-- Header Section -->
-    <header class="px-4 py-2 flex items-center justify-between fixed top-0 w-full z-50 bg-slate-800 shadow-md">
-        <h1 class="text-xl font-bold">Multi-Agent AI System</h1>
-        <button onclick="toggleSidebar()" class="ml-auto p-2 rounded hover:bg-slate-700">
-            Stats
-        </button>
-    </header>
+    <main class="flex flex-col flex-grow h-full p-6 border-r border-zinc-800 bg-zinc-950/80 backdrop-blur-sm relative">
 
-    <!-- Main Content Area -->
-    <main class="flex grow mt-16">
+        <header class="mb-6 flex items-center justify-between">
+            <h1 class="ndot text-3xl tracking-widest text-white">THE COMMITTEE</h1>
+            <div class="flex items-center gap-3">
+                <span class="ndot text-xs text-zinc-500">SYSTEM.STATUS</span>
+                <div class="w-2 h-2 rounded-full bg-accent-red animate-pulse shadow-[0_0_8px_#ef4444]"></div>
+            </div>
+        </header>
 
-        <!-- Central Chat Interface -->
-        <div class="w-full flex justify-center items-center p-4 space-y-4 overflow-auto">
-            <div class="max-w-2xl w-full bg-slate-700 rounded-lg p-4 h-screen">
-                <!-- Chat Messages will go here -->
+        <div id="chat-box" class="flex-grow overflow-y-auto mb-6 pr-4 space-y-6">
+            <div class="flex flex-col items-start w-full">
+                <span class="ndot text-xs text-zinc-500 mb-1">SYSTEM.BOOT</span>
+                <div
+                    class="bg-zinc-900 border border-zinc-800 text-zinc-300 p-4 rounded-sm max-w-[85%] font-mono text-sm leading-relaxed">
+                    Mesh connection established. Nodes synchronized. Waiting for input parameters.
+                </div>
             </div>
         </div>
 
-        <!-- Telemetry Sidebar -->
-        <aside id="telemetrySidebar" class="sidebar closed flex flex-col justify-between p-4 space-y-6 shadow-md">
-            <div>
-                <h2 class="text-lg font-semibold">Active Node</h2>
-                <p>Platform: PC</p>
+        <div class="flex gap-4 items-center">
+            <div class="flex-grow bg-zinc-900 border border-zinc-700 relative flex items-center">
+                <span class="ndot text-zinc-500 absolute left-4">></span>
+                <input type="text" id="user-input"
+                    class="w-full bg-transparent border-none outline-none text-white px-10 py-4 font-mono text-sm placeholder-zinc-600"
+                    placeholder="ENTER COMMAND OR PROMPT..." onkeypress="if(event.key === 'Enter') executeCommand()">
             </div>
-            <div>
-                <h2 class="text-lg font-semibold">GPU VRAM Usage</h2>
-                <p>16GB</p>
-            </div>
-            <div>
-                <h2 class="text-lg font-semibold">Tokens/Second</h2>
-                <p>500</p>
-            </div>
-        </aside>
-
+            <button onclick="executeCommand()"
+                class="ndot bg-accent-red text-black px-8 py-4 font-bold hover:bg-red-400 transition-colors shadow-[0_0_15px_rgba(239,68,68,0.2)]">
+                EXECUTE
+            </button>
+        </div>
     </main>
 
-    <!-- JavaScript Logic -->
+    <aside
+        class="w-[380px] h-full bg-zinc-950/95 p-6 flex flex-col gap-8 overflow-y-auto z-10 border-l border-black shadow-2xl">
+
+        <div class="border-b border-zinc-800 pb-2">
+            <h2 class="ndot text-xl text-zinc-100">CLUSTER.TELEMETRY</h2>
+        </div>
+
+        <div class="flex flex-col gap-4">
+            <div>
+                <h3 class="ndot text-sm text-zinc-400">NODE: APPLE M1 PRO (14B)</h3>
+                <p id="mac-status" class="ndot text-xs text-zinc-600 mt-1">STATUS: IDLE</p>
+            </div>
+            <div class="flex gap-4">
+                <div class="flex-1 bg-zinc-900 p-3 border border-zinc-800 flex flex-col items-center">
+                    <span class="ndot text-[10px] text-zinc-500 mb-2">CPU.USAGE</span>
+                    <svg viewBox="0 0 100 50" class="w-full drop-shadow-md">
+                        <path d="M 10 45 A 35 35 0 0 1 90 45" fill="none" stroke="#27272a" stroke-width="8"
+                            stroke-linecap="round" />
+                        <path id="gauge-mac-cpu" class="gauge-arc stroke-accent-red" d="M 10 45 A 35 35 0 0 1 90 45"
+                            fill="none" stroke-width="8" stroke-linecap="round" stroke-dasharray="110"
+                            stroke-dashoffset="105" />
+                    </svg>
+                    <span id="txt-mac-cpu" class="ndot text-lg text-white mt-1">5%</span>
+                </div>
+                <div class="flex-1 bg-zinc-900 p-3 border border-zinc-800 flex flex-col items-center">
+                    <span class="ndot text-[10px] text-zinc-500 mb-2">MEM.ALLOC</span>
+                    <svg viewBox="0 0 100 50" class="w-full drop-shadow-md">
+                        <path d="M 10 45 A 35 35 0 0 1 90 45" fill="none" stroke="#27272a" stroke-width="8"
+                            stroke-linecap="round" />
+                        <path id="gauge-mac-mem" class="gauge-arc stroke-accent-red" d="M 10 45 A 35 35 0 0 1 90 45"
+                            fill="none" stroke-width="8" stroke-linecap="round" stroke-dasharray="110"
+                            stroke-dashoffset="95" />
+                    </svg>
+                    <span id="txt-mac-mem" class="ndot text-lg text-white mt-1">4GB</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-4">
+            <div>
+                <h3 class="ndot text-sm text-zinc-400">NODE: RTX 4060 TI (3B)</h3>
+                <p id="pc-status" class="ndot text-xs text-zinc-600 mt-1">STATUS: IDLE</p>
+            </div>
+            <div class="flex gap-4">
+                <div class="flex-1 bg-zinc-900 p-3 border border-zinc-800 flex flex-col items-center">
+                    <span class="ndot text-[10px] text-zinc-500 mb-2">GPU.CORE</span>
+                    <svg viewBox="0 0 100 50" class="w-full drop-shadow-md">
+                        <path d="M 10 45 A 35 35 0 0 1 90 45" fill="none" stroke="#27272a" stroke-width="8"
+                            stroke-linecap="round" />
+                        <path id="gauge-pc-gpu" class="gauge-arc stroke-accent-red" d="M 10 45 A 35 35 0 0 1 90 45"
+                            fill="none" stroke-width="8" stroke-linecap="round" stroke-dasharray="110"
+                            stroke-dashoffset="108" />
+                    </svg>
+                    <span id="txt-pc-gpu" class="ndot text-lg text-white mt-1">2%</span>
+                </div>
+                <div class="flex-1 bg-zinc-900 p-3 border border-zinc-800 flex flex-col items-center">
+                    <span class="ndot text-[10px] text-zinc-500 mb-2">VRAM.ALLOC</span>
+                    <svg viewBox="0 0 100 50" class="w-full drop-shadow-md">
+                        <path d="M 10 45 A 35 35 0 0 1 90 45" fill="none" stroke="#27272a" stroke-width="8"
+                            stroke-linecap="round" />
+                        <path id="gauge-pc-vram" class="gauge-arc stroke-accent-red" d="M 10 45 A 35 35 0 0 1 90 45"
+                            fill="none" stroke-width="8" stroke-linecap="round" stroke-dasharray="110"
+                            stroke-dashoffset="100" />
+                    </svg>
+                    <span id="txt-pc-vram" class="ndot text-lg text-white mt-1">1.5GB</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-zinc-900 border border-zinc-800 p-4 mt-auto">
+            <div class="flex justify-between items-end mb-4">
+                <span class="ndot text-xs text-zinc-500">RATE.TOKENS_SEC</span>
+                <span id="txt-tps" class="ndot text-2xl text-white">0</span>
+            </div>
+            <div class="flex justify-between items-end border-t border-zinc-800 pt-4">
+                <span class="ndot text-xs text-zinc-500">TOTAL.TOKENS</span>
+                <span id="txt-total-tokens" class="ndot text-lg text-white">14,520</span>
+            </div>
+        </div>
+
+    </aside>
+
     <script>
-        function toggleSidebar() {
-            const sidebar = document.getElementById('telemetrySidebar');
-            sidebar.classList.toggle('closed');
+        let totalTokens = 14520;
+
+        // Helper to set SVG gauge (0 to 100 percent)
+        // Max offset is 110 (empty), Min is 0 (full)
+        function setGauge(id, percent) {
+            const offset = 110 - (110 * (percent / 100));
+            document.getElementById(id).style.strokeDashoffset = offset;
         }
 
-        // Optional: Close sidebar when clicking outside
-        window.addEventListener('click', (event) => {
-            const sidebar = document.getElementById('telemetrySidebar');
-            if (!sidebar.contains(event.target) && event.target.id !== 'toggle-sidebar') {
-                sidebar.classList.add('closed');
-            }
-        });
-    </script>
+        function setIdleState() {
+            setGauge('gauge-mac-cpu', 5);
+            document.getElementById('txt-mac-cpu').innerText = '5%';
+            setGauge('gauge-mac-mem', 12); // 4/32GB
+            document.getElementById('txt-mac-mem').innerText = '4.1GB';
 
+            setGauge('gauge-pc-gpu', 2);
+            document.getElementById('txt-pc-gpu').innerText = '2%';
+            setGauge('gauge-pc-vram', 9); // 1.5/16GB
+            document.getElementById('txt-pc-vram').innerText = '1.5GB';
+
+            document.getElementById('txt-tps').innerText = '0';
+            document.getElementById('mac-status').innerText = 'STATUS: IDLE';
+            document.getElementById('pc-status').innerText = 'STATUS: IDLE';
+            document.getElementById('mac-status').classList.remove('accent-red');
+            document.getElementById('pc-status').classList.remove('accent-red');
+        }
+
+        function setComputeState() {
+            setGauge('gauge-mac-cpu', Math.floor(Math.random() * 20) + 70); // 70-90%
+            document.getElementById('txt-mac-cpu').innerText = '82%';
+            setGauge('gauge-mac-mem', 40);
+            document.getElementById('txt-mac-mem').innerText = '12.4GB';
+
+            setGauge('gauge-pc-gpu', Math.floor(Math.random() * 15) + 85); // 85-100%
+            document.getElementById('txt-pc-gpu').innerText = '94%';
+            setGauge('gauge-pc-vram', 60);
+            document.getElementById('txt-pc-vram').innerText = '9.6GB';
+
+            document.getElementById('txt-tps').innerText = Math.floor(Math.random() * 50) + 200; // 200-250 tps
+
+            document.getElementById('mac-status').innerText = 'STATUS: ARCHITECTING...';
+            document.getElementById('pc-status').innerText = 'STATUS: EXECUTING...';
+            document.getElementById('mac-status').classList.add('accent-red');
+            document.getElementById('pc-status').classList.add('accent-red');
+        }
+
+        async function executeCommand() {
+            const inputField = document.getElementById('user-input');
+            const message = inputField.value.trim();
+            if (!message) return;
+
+            // 1. Post User Message
+            appendMessage(message, 'user');
+            inputField.value = '';
+
+            // 2. Trigger Telemetry Compute Animation
+            const loadingId = appendLoading();
+            setComputeState();
+
+            try {
+                // 3. Talk to FastAPI / Tailscale Backend
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: message })
+                });
+
+                if (!response.ok) throw new Error("API Error");
+                const data = await response.json();
+
+                // 4. Handle Response
+                document.getElementById(loadingId).remove();
+                appendMessage(data.response, 'ai');
+
+                // --- NEW: INJECT REAL MAC TELEMETRY ---
+                // We update the Mac dials with the real data returned from FastAPI
+                setGauge('gauge-mac-cpu', data.telemetry.mac_cpu);
+                document.getElementById('txt-mac-cpu').innerText = data.telemetry.mac_cpu + '%';
+
+                setGauge('gauge-mac-mem', data.telemetry.mac_mem_percent);
+                document.getElementById('txt-mac-mem').innerText = data.telemetry.mac_mem_gb + 'GB';
+
+                // (We leave the PC and Tokens as simulated randoms for now until Phase 2)
+                setIdleStatePC();
+
+            } catch (error) {
+                document.getElementById(loadingId).remove();
+                appendMessage("ERR: CONNECTION_REFUSED. Check Tailscale Mesh.", 'error');
+                setIdleState();
+            }
+
+            // 5. Return Telemetry to Idle
+            setTimeout(setIdleState, 500);
+        }
+
+        function appendMessage(text, sender) {
+            const chatBox = document.getElementById('chat-box');
+            const div = document.createElement('div');
+            div.className = "flex flex-col w-full " + (sender === 'user' ? "items-end" : "items-start");
+
+            let label = sender === 'user' ? "USER.INPUT" : (sender === 'ai' ? "COMMITTEE.OUTPUT" : "SYS.ERROR");
+            let labelColor = sender === 'user' ? "text-zinc-500" : (sender === 'ai' ? "text-zinc-400" : "text-accent-red");
+            let bubbleClass = sender === 'user'
+                ? "bg-zinc-800 text-white"
+                : "bg-zinc-900 border border-zinc-800 text-zinc-300 font-mono text-sm whitespace-pre-wrap overflow-x-auto";
+
+            if (sender === 'error') bubbleClass = "bg-red-950/20 border border-accent-red text-accent-red font-mono text-sm";
+
+            div.innerHTML = `
+                <span class="ndot text-xs ${labelColor} mb-1">${label}</span>
+                <div class="${bubbleClass} p-4 rounded-sm max-w-[85%] leading-relaxed">
+                    ${escapeHTML(text)}
+                </div>
+            `;
+
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function appendLoading() {
+            const chatBox = document.getElementById('chat-box');
+            const id = 'loading-' + Date.now();
+            const div = document.createElement('div');
+            div.id = id;
+            div.className = "flex flex-col items-start w-full";
+            div.innerHTML = `
+                <span class="ndot text-xs text-accent-red mb-1 animate-pulse">PROCESSING.REQUEST...</span>
+                <div class="bg-zinc-900 border border-zinc-800 p-4 rounded-sm flex gap-3 items-center">
+                    <div class="w-2 h-2 bg-zinc-500 rounded-sm animate-ping"></div>
+                    <div class="ndot text-zinc-500 text-sm">AWAITING NODE RESPONSE</div>
+                </div>
+            `;
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            return id;
+        }
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, tag => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+            }[tag] || tag));
+        }
+
+        // --- ADD THIS NEW FUNCTION ---
+
+        async function fetchLiveTelemetry() {
+            try {
+                // Fetch from the new FastAPI heartbeat route
+                const response = await fetch('/api/telemetry');
+                if (!response.ok) return;
+
+                const data = await response.json();
+
+                // Instantly update the Mac SVG gauges and text
+                setGauge('gauge-mac-cpu', data.mac_cpu);
+                document.getElementById('txt-mac-cpu').innerText = data.mac_cpu + '%';
+
+                setGauge('gauge-mac-mem', data.mac_mem_percent);
+                document.getElementById('txt-mac-mem').innerText = data.mac_mem_gb + 'GB';
+
+                // Update status text to show it's live monitoring
+                const macStatus = document.getElementById('mac-status');
+                if (macStatus.innerText === 'STATUS: IDLE' || macStatus.innerText.includes('LIVE')) {
+                    macStatus.innerText = 'STATUS: LIVE MONITORING...';
+                    macStatus.classList.remove('accent-red');
+                }
+
+            } catch (error) {
+                console.warn("Telemetry heartbeat lost. Retrying...");
+            }
+        }
+        // Initialize state and start the heartbeat interval loop
+            window.onload = () => {
+                setIdleState();
+                // 1500 = ping the server every 1.5 seconds
+                setInterval(fetchLiveTelemetry, 1500);
+            };
+    </script>
 </body>
 
 </html>
