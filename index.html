@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Agent AI System</title>
+
+    <!-- Tailwind CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+    <!-- Custom Styles (if any) -->
+    <style>
+        /* Optional custom styles can be added here */
+        .sidebar {
+            width: 300px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .sidebar.closed {
+            transform: translateX(100%);
+        }
+    </style>
+</head>
+
+<body class="bg-slate-900 text-white flex min-h-screen">
+
+    <!-- Header Section -->
+    <header class="px-4 py-2 flex items-center justify-between fixed top-0 w-full z-50 bg-slate-800 shadow-md">
+        <h1 class="text-xl font-bold">Multi-Agent AI System</h1>
+        <button onclick="toggleSidebar()" class="ml-auto p-2 rounded hover:bg-slate-700">
+            Stats
+        </button>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex grow mt-16">
+
+        <!-- Central Chat Interface -->
+        <div class="w-full flex justify-center items-center p-4 space-y-4 overflow-auto">
+            <div class="max-w-2xl w-full bg-slate-700 rounded-lg p-4 h-screen">
+                <!-- Chat Messages will go here -->
+            </div>
+        </div>
+
+        <!-- Telemetry Sidebar -->
+        <aside id="telemetrySidebar" class="sidebar closed flex flex-col justify-between p-4 space-y-6 shadow-md">
+            <div>
+                <h2 class="text-lg font-semibold">Active Node</h2>
+                <p>Platform: PC</p>
+            </div>
+            <div>
+                <h2 class="text-lg font-semibold">GPU VRAM Usage</h2>
+                <p>16GB</p>
+            </div>
+            <div>
+                <h2 class="text-lg font-semibold">Tokens/Second</h2>
+                <p>500</p>
+            </div>
+        </aside>
+
+    </main>
+
+    <!-- JavaScript Logic -->
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('telemetrySidebar');
+            sidebar.classList.toggle('closed');
+        }
+
+        // Optional: Close sidebar when clicking outside
+        window.addEventListener('click', (event) => {
+            const sidebar = document.getElementById('telemetrySidebar');
+            if (!sidebar.contains(event.target) && event.target.id !== 'toggle-sidebar') {
+                sidebar.classList.add('closed');
+            }
+        });
+    </script>
+
+</body>
+
+</html>
