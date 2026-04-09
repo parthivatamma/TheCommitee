@@ -21,8 +21,8 @@ PC_VLLM_URL = f"http://{PC_IP}:8000/v1/models"
 PC_PROBE_URL = f"http://{PC_IP}:8001/stats"
 
 
-def is_node_alive(ip, port, timeout=0.1):
-    """Bypasses HTTP to instantly check if a machine is alive on the network."""
+# --- 1. UPDATE THE SOCKET TIMEOUT ---
+def is_node_alive(ip, port, timeout=0.3):  # <-- Changed to 0.3s
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.settimeout(timeout)
@@ -75,7 +75,7 @@ async def get_live_telemetry():
     pc_vram = 0
     if is_node_alive(PC_IP, 8000) and is_node_alive(PC_IP, 8001):
         try:
-            resp = requests.get(PC_PROBE_URL, timeout=0.5)
+            resp = requests.get(PC_PROBE_URL, timeout=0.8)  # <-- Changed to 0.8s
             if resp.status_code == 200:
                 data = resp.json()
                 pc_gpu = data.get("gpu_percent", 0)
